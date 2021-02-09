@@ -1,0 +1,21 @@
+{
+  "name": "family-api",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Family API",
+  "engines": {
+    "node": "12.19.0"
+  },
+  "keywords": [
+    "messagingApp",
+    "heroku"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+},
+  "dependencies": {
+    "express": "^4.17.1",
+    "nexmo": "2.9.1"
+  }
+}
