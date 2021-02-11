@@ -16,7 +16,15 @@ const sendMessage=(to, text)=>{
     apiKey: process.env.NEXMO_API_KEY,
     apiSecret: process.env.NEXMO_API_SECRET,
   });
-  nexmo.message.sendSms(from, to, text);
+  nexmo.message.sendSms(from, 
+    to, 
+    text, 
+    (err, responseData) => {
+    if (err) {
+      console.log(`Error:`,err);
+    } else {
+      console.dir(`Success:`,responseData);
+    }});
 }
 
 
