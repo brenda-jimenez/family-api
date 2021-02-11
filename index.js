@@ -41,7 +41,7 @@ app.post('/requestFood', (req, res) => {
     lunchText+= `${lunch.entry}, ${lunch.main}, ${lunch.salad}, ${lunch.dessert}. `
   });
   const lunchPhoneNumber=process.env.WATER_MOBILE_TO;
-  const lunchMessage=`Buenas tardes. Me gustaria pedir ${numberOfLunch} comidas corridas a ${address}. ${lunchText} .Gracias ${from}.`;
+  const lunchMessage=`Buenas tardes. Me gustaria pedir ${numberOfLunch} comidas corridas a ${address}. ${lunchText} Gracias ${from}.`;
   sendMessage(lunchPhoneNumber, lunchMessage );
   res.send({lunchMessage});
 })
