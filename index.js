@@ -7,7 +7,7 @@ const port = process.env.PORT
 const host= process.env.HOST
 const address=process.env.ADDRESS;
 const from = process.env.NAME;
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 
@@ -16,15 +16,27 @@ const sendMessage=(to, text)=>{
     apiKey: process.env.NEXMO_API_KEY,
     apiSecret: process.env.NEXMO_API_SECRET,
   });
-  nexmo.message.sendSms(from, 
-    to, 
-    text, 
-    (err, responseData) => {
+
+  const options={
+    // If true, log information to the console
+    debug: true,
+  };
+
+  const callback=(err, response) => {
     if (err) {
       console.log(`Error:`,err);
     } else {
-      console.dir(`Success:`,responseData);
-    }});
+      console.dir(`Success:`,response);
+    }
+  }
+
+  nexmo.message.sendSms(
+    from, 
+    to, 
+    text, 
+    options,
+    callback
+  );
 }
 
 
@@ -37,7 +49,7 @@ app.get('/requestWater/:waterTanks', (req, res) => {
   const waterPhoneNumber=process.env.WATER_MOBILE_TO;
   const waterMessage=`Buenas tardes Sr. Roberto. Podria traerme ${numberWaterTanks} garrafones Bonafont a ${address}. Gracias ${from}.`;
   sendMessage(waterPhoneNumber, waterMessage );
-  res.send({waterMessage});
+  res.send();
 })
 
 app.post('/requestFood', (req, res) => {
@@ -53,6 +65,28 @@ app.post('/requestFood', (req, res) => {
   sendMessage(lunchPhoneNumber, lunchMessage );
   res.send({lunchMessage});
 })
+
+
+app.route('/webhooks/inbound-sms')
+  .get(handleInboundSms)
+  .post(handleInboundSms)
+
+function handleInboundSms(request, response) {
+  const params = Object.assign(request.query, request.body)
+  console.log(params)
+  response.status(204).send()
+}
+
+app.route('/webhooks/outbound-sms')
+  .get(handleOutboundSms)
+  .post(handleOutboundSms)
+
+function handleOutboundSms(request, response) {
+  const params = Object.assign(request.query, request.body)
+  console.log(params)
+  response.status(204).send()
+}
+
 
 app.listen(port, host, () => {
   console.log(`Example app listening at http://${host}:${port}`)
